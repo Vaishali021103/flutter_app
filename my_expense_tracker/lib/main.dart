@@ -21,6 +21,7 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   List<Expense> _expenses = [];
+  double _income = 0.0; // Add income variable
 
   @override
   Widget build(BuildContext context) {
@@ -35,12 +36,34 @@ class _MyHomePageState extends State<MyHomePage> {
             elevation: 5,
             child: Padding(
               padding: const EdgeInsets.all(10.0),
-              child: Text(
-                'Total Expenses: \$${_getTotalExpense()}',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+              child: Column(
+                children: [
+                  TextField(
+                    decoration: InputDecoration(labelText: 'Income'),
+                    keyboardType: TextInputType.numberWithOptions(decimal: true),
+                    onChanged: (value) {
+                      if (value.isNotEmpty) {
+                        _updateIncome(double.parse(value));
+                      }
+                    },
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Total Expenses: \$${_getTotalExpense()}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    'Remaining Income: \$${(_income - _getTotalExpense()).toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
+                  ),
+                ],
               ),
             ),
           ),
@@ -100,6 +123,12 @@ class _MyHomePageState extends State<MyHomePage> {
 
     setState(() {
       _expenses.add(newExpense);
+    });
+  }
+
+  void _updateIncome(double income) {
+    setState(() {
+      _income = income;
     });
   }
 }
